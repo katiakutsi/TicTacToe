@@ -78,6 +78,7 @@ def insertLetter(letter, position):
         board[position] = letter
         printBoard(board)
 
+        # ყოველი სიმბოლოს ჩასმისას ვამოწმებთ ფრე ხომ არ არის უკვე ან რომელიმე მოთამაშემ ხომ არ მოიგო
         if(checkForDraw()):
             print('Draw')
             return
@@ -100,6 +101,8 @@ def playerMove():
 
 
 def minimax(board, isMaximizing):
+    # რადგან minimax ფუნქცია რეკურსიულია გვჭირდება პირობა რომლის შემდეგაც ფუნცია დაასრულებს მუშაობას
+    # ანუ თუ რომელიმე მოთამაშე მოიგებს ან თუ ფრე იქნება
     if checkWhichMarkWin(computer):
         return 100
     elif checkWhichMarkWin(player):
@@ -107,6 +110,9 @@ def minimax(board, isMaximizing):
     elif checkForDraw():
         return 0
 
+    # ვამოწმებთ მოთამაშე მინიმიზაციას აკეთებს თუ მაქსიმიზაციას
+    # ამ მეთოდში ხდება იგივე რაც computerMove() მეთოდში გამოკლებით იმისა რომ
+    # აქ არ ხდება დამახსოვრება პოზიციის
     if isMaximizing:
         bestScore = -1000
 
@@ -136,16 +142,23 @@ def computerMove():
     bestScore = -1000
     bestMove = 0
 
-
+    # გადავივლით დაფის ყველა პოზიციაზე
     for key in board.keys():
+        # და ვამოწმებთ თუ შეუვსებელია ეს პოზიცია
         if(board[key] == ' '):
+            # თუ შეუვსებელია მაშინ დროებით ვავსებთ X-ით
             board[key] = computer
+            # ვითვლით შეფასებას ამ პოზიციით შევსებისთვის
             score = minimax(board, False)
+            # ვასუფთავებთ ისევ პოზიციას და
             board[key] = ' '
+            # თუ მიმდინარე შეფასება მეტია საუკეთესო შეფასებაზე მაშინ ვინახავთ საუკეთესო შეფასებას და
+            # მის პოზიციას
             if score > bestScore:
                 bestScore = score
                 bestMove = key
 
+    # მას შემდეგ რაც ციკლი მორჩება მუშაობას გვექნება უკვე საუკეთესო პოზიცია ახალი სვლისთვის
     insertLetter(computer, bestMove)
     return
 
